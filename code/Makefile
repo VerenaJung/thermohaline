@@ -1,0 +1,97 @@
+#================================================================
+#                     TRACMASS MAKEFILE
+#================================================================
+
+RUNFILE 	        = runtht
+ARCH              =
+NETCDFLIBS        =automatic-44
+#================================================================
+
+# Possible architectures:
+# tetralith    (Swedish HPC with intel)
+
+# Possible netCDF settings:
+# automatic    (set by nc-config)
+# automatic-44 (set by nf-config, for netCDF version >4.4)
+# none         (no netCDF library)
+
+#================================================================
+# ***************************************************************
+#================================================================
+
+# NetCDF libraries
+ifeq ($(NETCDFLIBS),none)
+LIB_DIR =
+INC_DIR =
+ORM_FLAGS += -Dno_netcdf
+
+else ifeq ($(NETCDFLIBS),automatic)
+LIB_DIR = $(shell nc-config --flibs)
+INC_DIR = -I$(shell nc-config --includedir)
+
+else ifeq ($(NETCDFLIBS),automatic-44)
+LIB_DIR = $(shell nf-config --flibs)
+INC_DIR = $(shell nf-config --cflags)
+
+else
+NCDF_ROOT = /usr/local/Cellar/netcdf/4.7.4_2
+
+LIB_DIR = -L$(NCDF_ROOT)/lib -lnetcdf -lnetcdff
+INC_DIR	= -I$(NCDF_ROOT)/include
+
+endif
+
+# Fortran compiler and flags
+ifeq ($(ARCH),tetralith)
+FC = ifort
+FF = -g -O3 -traceback -pg
+
+else
+#FC = /opt/local/bin/gfortran-mp-12
+FC = gfortran
+FF = -g -O3  -fbounds-check -fbacktrace
+#FF = -g -O3 -fbacktrace -fbounds-check -Wall -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-surprising
+
+endif
+
+# Path to sources
+VPATH = src
+
+all: runfile
+
+#================================================================
+
+# Object definitions
+OBJDIR := _build
+
+objects := $(addprefix $(OBJDIR)/,mod_vars.o mod_write.o mod_fluxes.o mod_init.o mod_getdata.o main_THT.o)
+
+$(OBJDIR)/%.o : %.F90
+		$(FC) $(FF) -c $(ORM_FLAGS) $(PROJECT_FLAG) $(CASE_FLAG) $(INC_DIR) $(LIB_DIR) $< -o $@
+
+$(objects) : | $(OBJDIR)
+
+$(OBJDIR):
+			mkdir -p $(OBJDIR)
+
+#================================================================
+
+runfile : $(objects)
+
+	$(FC) $(FF) $(ORM_FLAGS) -o $(RUNFILE) $(objects) $(INC_DIR) $(LIB_DIR)
+
+.PHONY : clean
+
+clean:
+
+	-rm -rf *.o *.mod *.out *.dSYM $(RUNFILE)
+	-rm -rf _build
+	-rm $(RUNFILE)
+
+.PHONY : help
+
+help :
+	@echo
+	@echo "make       : Generate THT runfile '$(RUNFILE)'."
+	@echo "make clean : Remove auto-generated files."
+	@echo

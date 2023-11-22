@@ -1,0 +1,92 @@
+&INIT_INFILES
+
+! Input data directory
+!inDataDir = '/Users/doos/Box Sync/Dokument/papers/thc_rymd/ecearth/',
+inDataDir = '/Users/doos/Box Sync/Public/tracmass_data/orca1/fields/',
+
+! Data file common suffix
+DataSuffix ='ORCA1-N406_',
+
+! Name of zonal fluxes
+!u_name = 'U',
+
+! Name of meridional fluxes
+!v_name = 'vmo',
+
+ueul_name      = 'vozocrtx',                    ! name of resolved zonal velocity
+veul_name      = 'vomecrty',                    ! ---- " -------   meridional
+usgs_name      = 'vozoeivu',                    ! name of eddy induced zonal velocity
+vsgs_name      = 'vomeeivv',                    ! ---- " -------   meridional
+zos_name       = 'sossheig',                    ! Sea surface height
+
+! Read vertical fluxes
+!l_read_wflux = .FALSE.,
+
+! Name of gridcell mass
+mass_name = '',
+
+! Tracers name, minimum and maximum values (in the THT space)
+otracer_name    = 'vosaline', 'votemper',
+otracer_minimum = 30., -3.,
+otracer_maximum = 40., 37,
+
+! Path to the topography directory
+!topoDataDir = '/Users/doos/Box Sync/Dokument/papers/thc_rymd/ecearth/',
+topoDataDir = '/Users/doos/Box Sync/Public/tracmass_data/orca1/topo/',
+
+! Topography file common suffix
+topoSuffix ='mesh_mask',
+
+! Name of area file
+area_name = 'mbathy'
+/
+
+&INIT_GRID_DESCRIPTION
+
+! Number of zonal points
+imt = 362,
+
+! Number of meridional points
+jmt = 292,
+
+! Number of vertical points
+kmt = 75
+
+dxv_name = 'e1v'                            !         dx at V point
+dyu_name = 'e2u'                            !         dy at U point
+dxt_name = 'e1t'                            ! name of dx at T point
+dyt_name = 'e2t'                            ! name of dy at T point
+dzt_name = 'e3t_0'                          ! name of 3D dz at T point
+dzu_name = 'e3u_0'                          ! --- " ---  dz at U point
+dzv_name = 'e3v_0'                          ! --- " ---  dz at V point
+kzt_name = 'mbathy'                         ! bathymetry maodel levels 
+
+/
+
+&INIT_THERMO
+
+! Include mass distribution of E-P and heat fluxes
+l_thermo = .FALSE.,
+
+! Name of E-P
+eva_name = '',
+
+! Name of heat fluxes
+hfl_name = '',
+/
+
+&INIT_CALENDAR
+startYear = 2000,
+endYear   = 2000,
+
+! Time step in secs of the input data
+dtimeo = 2629800,
+/
+
+&INIT_OUTFILES
+outDataDir = '/Users/doos/Box Sync/Dokument/papers/thc_rymd/data/',
+outDataFile = 'HTH_2000',
+
+! Rerun computation of streamfunctions by reading fluxes instead of computing them
+l_rerun = .FALSE.
+/

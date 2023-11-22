@@ -1,0 +1,94 @@
+&INIT_INFILES
+
+! Input data directory
+inDataDir = '/home/veju4118/Documents/LOCOS-project/data/orca1-selected/',
+
+! Data file common suffix
+DataSuffix ='t612_1m_',
+fileSuffix     = '_3D.nc',
+
+runcase='ORCA1L75'
+
+! Name of zonal and meridional fluxes in kg/s
+u_name = 'umo',
+v_name = 'vmo',
+
+ueul_name      = 'umo',                    ! name of resolved zonal velocity
+veul_name      = 'vmo',                    ! ---- " -------   meridional
+usgs_name      = '',                    ! name of eddy induced zonal velocity
+vsgs_name      = '',                    ! ---- " -------   meridional
+zos_name       = '',                    ! Sea surface height
+
+! Read eddy induced velocities
+l_eddy = .FALSE.,
+
+! Name of gridcell mass
+mass_name = 'masscello',
+
+! Tracers name, minimum and maximum values (in the THT space)
+otracer_name    = 'so', 'thetao',
+otracer_minimum = 30., -3.,
+otracer_maximum = 40., 37,
+
+! Path to the topography directory
+topoDataDir = '/home/veju4118/Documents/LOCOS-project/data/orca1-selected/',
+
+! Topography file common suffix
+topoSuffix ='mesh_mask_nemo.Ec3.2_O1L75.nc',
+
+! Name of area file
+area_name = 'mbathy'
+/
+
+&INIT_GRID_DESCRIPTION
+
+! Number of zonal points
+imt = 362,
+
+! Number of meridional points
+jmt = 292,
+
+! Number of vertical points
+kmt = 75
+
+dxv_name = 'e1v'                            !         dx at V point
+dyu_name = 'e2u'                            !         dy at U point
+dxt_name = 'e1t'                            ! name of dx at T point
+dyt_name = 'e2t'                            ! name of dy at T point
+dzt_name = 'e3t_0'                          ! name of 3D dz at T point
+dzu_name = 'e3u_0'                          ! --- " ---  dz at U point
+dzv_name = 'e3v_0'                          ! --- " ---  dz at V point
+kzt_name = 'mbathy'                         ! bathymetry maodel levels 
+
+/
+
+&INIT_THERMO
+
+! Include mass distribution of E-P and heat fluxes
+l_thermo = .FALSE.,
+
+! Name of E-P
+eva_name = '',
+
+! Name of heat fluxes
+hfl_name = '',
+/
+
+&INIT_CALENDAR
+startYear = 2000,
+endYear   = 2001,
+
+! Data frequency
+nfreq=1    ! 1=monthly, 2=every five day, 3= daily
+
+! Time step in secs of the input data
+dtimeo = 2629800, ! 1 month
+/
+
+&INIT_OUTFILES
+outDataDir = '/home/veju4118/Documents/LOCOS-project/data/streamfunction-data-out/',
+outDataFile = 'HTH_ORCA1L75_2000-2001',
+
+! Rerun computation of streamfunctions by reading fluxes instead of computing them
+l_rerun = .FALSE.
+/
